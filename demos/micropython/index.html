@@ -7,9 +7,28 @@
     <link rel="stylesheet" href="style.css">
     <!--<script src="/storage.js"></script>-->
     <script src="../../blockly_compressed.js"></script>
-    <script src="../../blocks_compressed.js"></script>
-    <script src="../../python_compressed.js"></script>
+
+    <script src="../../blocks/logic.js"></script>
+    <script src="../../blocks/loops.js"></script>
+    <script src="../../blocks/math.js"></script>
+    <script src="../../blocks/text.js"></script>
+    <script src="../../blocks/lists.js"></script>
+    <script src="../../blocks/colour.js"></script>
+    <script src="../../blocks/variables.js"></script>
+    <script src="../../blocks/procedures.js"></script>
+
+    <script src="../../generators/micropython.js"></script>
+    <script src="../../generators/micropython/logic.js"></script>
+    <script src="../../generators/micropython/loops.js"></script>
+    <script src="../../generators/micropython/math.js"></script>
+    <script src="../../generators/micropython/text.js"></script>
+    <script src="../../generators/micropython/lists.js"></script>
+    <script src="../../generators/micropython/colour.js"></script>
+    <script src="../../generators/micropython/variables.js"></script>
+    <script src="../../generators/micropython/procedures.js"></script>
+
     <script src="code.js"></script>
+
 </head>
 <body>
     <table width="100%" height="100%">
@@ -31,7 +50,7 @@
                     <tr id="tabRow" height="1em">
                         <td id="tab_blocks" class="tabon">...</td>
                         <td class="tabmin">&nbsp;</td>
-                        <td id="tab_python" class="taboff">Python</td>
+                        <td id="tab_micropython" class="taboff">MicroPython</td>
                         <td class="tabmin">&nbsp;</td>
                         <td id="tab_xml" class="taboff">XML</td>
                         <td class="tabmax">
@@ -54,7 +73,7 @@
         </tr>
     </table>
     <div id="content_blocks" class="content"></div>
-    <pre id="content_python" class="content"></pre>
+    <pre id="content_micropython" class="content"></pre>
     <textarea id="content_xml" class="content" wrap="off"></textarea>
 
     <xml id="toolbox" style="display: none">

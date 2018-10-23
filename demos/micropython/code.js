@@ -238,7 +238,7 @@ Code.LANG = Code.getLang();
  * List of tab names.
  * @private
  */
-Code.TABS_ = ['blocks', 'python', 'xml'];
+Code.TABS_ = ['blocks', 'micropython', 'xml'];
 
 Code.selected = 'blocks';
 
@@ -303,8 +303,8 @@ Code.renderContent = function() {
         var xmlText = Blockly.Xml.domToPrettyText(xmlDom);
         xmlTextarea.value = xmlText;
         xmlTextarea.focus();
-    } else if (content.id == 'content_python') {
-        Code.attemptCodeGeneration(Blockly.Python, 'py');
+    } else if (content.id == 'content_micropython') {
+        Code.attemptCodeGeneration(Blockly.MicroPython, 'py');
     }
 };
 
