@@ -17,6 +17,8 @@
     <script src="../../blocks/variables.js"></script>
     <script src="../../blocks/procedures.js"></script>
 
+    <script src="../../blocks/esp32/io.js"></script>
+
     <script src="../../generators/micropython.js"></script>
     <script src="../../generators/micropython/logic.js"></script>
     <script src="../../generators/micropython/loops.js"></script>
@@ -55,13 +57,13 @@
                         <td id="tab_xml" class="taboff">XML</td>
                         <td class="tabmax">
                             <button id="trashButton" class="notext" title="...">
-                                <img src='../../media/1x1.gif' class="trash icon21">
+                                <img src=../../media/1x1.gif class="trash icon21">
                             </button>
                             <button id="linkButton" class="notext" title="...">
-                                <img src='../../media/1x1.gif' class="link icon21">
+                                <img src=../../media/1x1.gif class="link icon21">
                             </button>
                             <button id="runButton" class="notext primary" title="...">
-                                <img src='../../media/1x1.gif' class="run icon21">
+                                <img src=../../media/1x1.gif class="run icon21">
                             </button>
                         </td>
                     </tr>
@@ -370,6 +372,40 @@
                 </value>
             </block>
         </category>
+        <sep></sep>
+        <category category name="%{BKY_IO}" colour="%{BKY_IO_HUE}">
+            <block type="io_digitalwrite">
+                <value name="STATE">
+                    <block type="io_highlow"></block>
+                </value>
+            </block>
+            <block type="io_digitalread"></block>
+            <block type="io_builtin_led">
+                <value name="STATE">
+                    <block type="io_highlow"></block>
+                </value>
+            </block>
+            <block type="io_analogwrite"></block>
+            <block type="io_analogread"></block>
+            <block type="io_highlow"></block>
+            <block type="io_pulsein">
+                <value name="PULSETYPE">
+                    <shadow type="io_highlow"></shadow>
+                </value>
+            </block>
+            <block type="io_pulsetimeout">
+                <value name="PULSETYPE">
+                    <shadow type="io_highlow"></shadow>
+                </value>
+                <value name="TIMEOUT">
+                    <shadow type="math_number">
+                        <field name="NUM">100</field>
+                    </shadow>
+                </value>
+            </block>
+
+        </category>
+
         <sep></sep>
         <category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
         <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
