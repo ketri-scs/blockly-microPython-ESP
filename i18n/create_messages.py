@@ -29,11 +29,11 @@ _NEWLINE_PATTERN = re.compile('[\n\r]')
 
 
 def string_is_ascii(s):
-  try:
-    s.decode('ascii')
-    return True
-  except UnicodeEncodeError:
-    return False
+    try:
+        s.encode('ascii')
+        return True
+    except UnicodeEncodeError:
+        return False
 
 def load_constants(filename):
   """Read in constants file, which must be output in every language."""
@@ -79,11 +79,11 @@ def main():
   # Make sure the source file doesn't contain a newline or carriage return.
   for key, value in source_defs.items():
     if _NEWLINE_PATTERN.search(value):
-      print('ERROR: definition of {0} in {1} contained a newline character.'.
-            format(key, args.source_lang_file))
+      print('ERROR: definition of {0} in {1} contained a newline character.'.format(
+        key, args.source_lang_file))
       sys.exit(1)
-  sorted_keys = source_defs.keys()
-  sorted_keys.sort()
+
+  sorted_keys = sorted(source_defs.keys())
 
   # Read in synonyms file, which must be output in every language.
   synonym_defs = read_json_file(os.path.join(

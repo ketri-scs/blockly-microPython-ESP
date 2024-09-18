@@ -53,7 +53,7 @@
 #   msg/js/<LANG>.js for every language <LANG> defined in msg/js/<LANG>.json.
 
 import sys
-if sys.version_info[0] != 2:
+if sys.version_info[0] != 3:
   raise Exception("Blockly build only compatible with Python 2.x.\n"
                   "You are using: " + sys.version)
 
@@ -65,7 +65,7 @@ for arg in sys.argv[1:len(sys.argv)]:
     raise Exception("Invalid argument: \"" + arg + "\". Usage: build.py "
         "<0 or more of accessible, core, generators, langfiles>")
 
-import errno, glob, httplib, json, os, re, subprocess, threading, urllib
+import errno, glob, json, os, re, subprocess, threading, urllib
 
 
 def import_path(fullpath):
@@ -82,7 +82,8 @@ def import_path(fullpath):
   filename, ext = os.path.splitext(filename)
   sys.path.append(path)
   module = __import__(filename)
-  reload(module)  # Might be out of date.
+  import importlib
+  importlib.reload(module)  # Might be out of date.
   del sys.path[-1]
   return module
 
@@ -456,6 +457,7 @@ class Gen_langfiles(threading.Thread):
 
   def run(self):
     # The files msg/json/{en,qqq,synonyms}.json depend on msg/messages.js.
+    import os
     if (self.force_gen or
         self._rebuild([os.path.join("msg", "messages.js")],
                       [os.path.join("msg", "json", f) for f in
@@ -476,24 +478,39 @@ class Gen_langfiles(threading.Thread):
     # Checking whether it is necessary to rebuild the js files would be a lot of
     # work since we would have to compare each <lang>.json file with each
     # <lang>.js file.  Rebuilding is easy and cheap, so just go ahead and do it.
+    import sys
+    import os
+    import glob
+    import subprocess
+
     try:
       # Use create_messages.py to create .js files from .json files.
       cmd = [
-          "python",
+          sys.executable,  # Use the current Python interpreter
           os.path.join("i18n", "create_messages.py"),
           "--source_lang_file", os.path.join("msg", "json", "en.json"),
           "--source_synonym_file", os.path.join("msg", "json", "synonyms.json"),
           "--source_constants_file", os.path.join("msg", "json", "constants.json"),
           "--key_file", os.path.join("msg", "json", "keys.json"),
           "--output_dir", os.path.join("msg", "js"),
-          "--quiet"]
+          "--quiet"
+      ]
       json_files = glob.glob(os.path.join("msg", "json", "*.json"))
       json_files = [file for file in json_files if not
-                    (file.endswith(("keys.json", "synonyms.json", "qqq.json", "constants.json")))]
+                    file.endswith(("keys.json", "synonyms.json", "qqq.json", "constants.json"))]
       cmd.extend(json_files)
-      subprocess.check_call(cmd)
-    except (subprocess.CalledProcessError, OSError) as e:
-      print("Error running i18n/create_messages.py: ", e)
+      
+      result = subprocess.run(cmd, check=True, text=True, capture_output=True)
+      print("create_messages.py executed successfully.")
+      print("Standard output:", result.stdout)
+    except subprocess.CalledProcessError as e:
+      print("Error running i18n/create_messages.py:")
+      print("Exit code:", e.returncode)
+      print("Standard output:", e.stdout)
+      print("Standard error:", e.stderr)
+      sys.exit(1)
+    except OSError as e:
+      print("Error running i18n/create_messages.py:", e)
       sys.exit(1)
 
     # Output list of .js files created.
@@ -528,11 +545,11 @@ if __name__ == "__main__":
 developers.google.com/blockly/guides/modify/web/closure""")
     sys.exit(1)
 
-  core_search_paths = calcdeps.ExpandDirectories(
-      ["core", os.path.join(os.path.pardir, "closure-library")])
-  core_search_paths.sort()  # Deterministic build.
-  full_search_paths = calcdeps.ExpandDirectories(
-      ["accessible", "core", os.path.join(os.path.pardir, "closure-library")])
+  core_search_paths = list(calcdeps.ExpandDirectories(
+      ["core", os.path.join(os.path.pardir, "closure-library")]))
+  core_search_paths.sort() # Deterministic build.
+  full_search_paths = list(calcdeps.ExpandDirectories(
+      ["accessible", "core", os.path.join(os.path.pardir, "closure-library")]))
   full_search_paths.sort()  # Deterministic build.
 
   if (len(sys.argv) == 1):
